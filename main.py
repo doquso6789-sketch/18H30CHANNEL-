@@ -32,7 +32,7 @@ def save_storage(data):
 
 storage = load_storage()
 
-print("🚀 PRO MAX AI v8.3 STARTED")
+print("🚀 XSMB AI v8.3 STARTED")
 
 # =========================
 # LOOP
