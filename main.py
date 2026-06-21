@@ -55,7 +55,7 @@ while True:
         # FORMAT MESSAGE
         # =====================
         msg = f"""
-🚀 <b>PRO MAX AI v8.3</b>
+🚀 <b>XSMB AI v8.3</b>
 
 📊 CONFIDENCE: {result['confidence']}
 
