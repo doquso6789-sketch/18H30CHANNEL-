@@ -1,1 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>XSMB PRO MAX AI v8</title>
+</head>
 
+<body style="background:#0b1220;color:white;font-family:Arial;padding:20px;">
+
+<h1>🚀 PRO MAX AI v8 REAL AI</h1>
+
+<h2>📊 Confidence: <span id="conf">--</span></h2>
+
+<h3>🎯 Bạch thủ: <span id="bt"></span></h3>
+
+<h3>🔗 Xiên 2: <span id="x2"></span></h3>
+
+<h3>🔗 Xiên 3: <span id="x3"></span></h3>
+
+<h3>🎲 Lô 3 số: <span id="lo3"></span></h3>
+
+<h3>👑 Đề đặc biệt: <span id="de"></span></h3>
+
+<hr>
+
+<h3>🔥 HOT</h3>
+<div id="hot"></div>
+
+<h3>❄️ COLD</h3>
+<div id="cold"></div>
+
+<hr>
+
+<div style="border:1px solid #00ff88;padding:15px;border-radius:10px;">
+<h3>☕ ỦNG HỘ CÀ PHÊ</h3>
+<p>1 ly cà phê = 1 động lực AI</p>
+<a href="https://t.me/DonateXosoAI" target="_blank" style="color:#00ff88;">
+👉 Donate Telegram
+</a>
+</div>
+
+<script>
+
+const ws = new WebSocket("ws://localhost:8000/ws");
+
+ws.onmessage = (e) => {
+
+    const d = JSON.parse(e.data);
+
+    document.getElementById("conf").innerText = d.confidence;
+
+    document.getElementById("bt").innerText = d.bach_thu;
+
+    document.getElementById("x2").innerText = d.xien2.join(" - ");
+
+    document.getElementById("x3").innerText = d.xien3.join(" - ");
+
+    document.getElementById("lo3").innerText = d.lo3.join(" ");
+
+    document.getElementById("de").innerText = d.special;
+
+    document.getElementById("hot").innerText = d.hot.join(" ");
+
+    document.getElementById("cold").innerText = d.cold.join(" ");
+};
+
+</script>
+
+</body>
+</html>
