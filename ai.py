@@ -1,16 +1,7 @@
-import json
 import random
-from collections import Counter
 from sklearn.linear_model import LogisticRegression
 
-# ======================
-def load_data():
-    with open("data.json","r") as f:
-        return json.load(f)
-
-# ======================
 def features(data, num):
-
     freq = data.count(num)
 
     last = len(data)
@@ -21,10 +12,9 @@ def features(data, num):
 
     return [freq, last]
 
-# ======================
-def train():
 
-    data = load_data()
+def train(data):
+
     nums = list(set(data))
 
     X, y = [], []
@@ -37,12 +27,13 @@ def train():
     model = LogisticRegression(max_iter=200)
     model.fit(X, y)
 
-    return model, data
+    return model
 
-# ======================
+
 def predict(model, data):
 
     nums = list(set(data))
+
     scores = {}
 
     for n in nums:
@@ -53,8 +44,6 @@ def predict(model, data):
 
     hot = [x[0] for x in sorted_scores[:10]]
 
-    cold = [x[0] for x in sorted_scores[-10:]]
-
     bach_thu = hot[0]
 
     xien2 = random.sample(hot[:6], 2)
@@ -64,15 +53,12 @@ def predict(model, data):
 
     special = hot[0]
 
-    confidence = round(sorted_scores[0][1], 3)
-
     return {
         "hot": hot,
-        "cold": cold,
         "bach_thu": bach_thu,
         "xien2": xien2,
         "xien3": xien3,
         "lo3": lo3,
         "special": special,
-        "confidence": confidence
+        "confidence": round(sorted_scores[0][1], 3)
     }
