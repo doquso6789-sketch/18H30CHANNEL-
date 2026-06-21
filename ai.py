@@ -2,6 +2,7 @@ import random
 from sklearn.linear_model import LogisticRegression
 
 def features(data, num):
+
     freq = data.count(num)
 
     last = len(data)
@@ -53,6 +54,8 @@ def predict(model, data):
 
     special = hot[0]
 
+    confidence = round(sorted_scores[0][1], 3)
+
     return {
         "hot": hot,
         "bach_thu": bach_thu,
@@ -60,5 +63,5 @@ def predict(model, data):
         "xien3": xien3,
         "lo3": lo3,
         "special": special,
-        "confidence": round(sorted_scores[0][1], 3)
+        "confidence": confidence
     }
