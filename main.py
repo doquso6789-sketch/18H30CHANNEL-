@@ -1,60 +1,95 @@
-from fastapi import FastAPI, WebSocket
-from fastapi.responses import HTMLResponse
-from ai import train, predict
-from collector import crawl
+import time
+import json
 from datetime import datetime
 from zoneinfo import ZoneInfo
-import asyncio
-import json
 
-app = FastAPI()
+from collector import crawl
+from ai import train, predict
+from telegram import send_message
 
 VN = ZoneInfo("Asia/Ho_Chi_Minh")
-
-last_sent = None
 
 def today():
     return datetime.now(VN).strftime("%Y-%m-%d")
 
-def hour_min():
-    now = datetime.now(VN)
-    return now.hour, now.minute
+def now_time():
+    n = datetime.now(VN)
+    return n.hour, n.minute
 
-@app.get("/")
-def home():
-    return HTMLResponse(open("templates/dashboard.html","r",encoding="utf-8").read())
+# =========================
+# LOAD STORAGE
+# =========================
+def load_storage():
+    try:
+        with open("storage.json","r") as f:
+            return json.load(f)
+    except:
+        return {"last_sent": ""}
 
-@app.websocket("/ws")
-async def ws(websocket: WebSocket):
+def save_storage(data):
+    with open("storage.json","w") as f:
+        json.dump(data,f)
 
-    await websocket.accept()
+storage = load_storage()
 
-    global last_sent
+print("🚀 PRO MAX AI v8.3 STARTED")
 
-    while True:
+# =========================
+# LOOP
+# =========================
+while True:
+
+    try:
 
         data = crawl()
+
+        if len(data) == 0:
+            print("⚠️ no data")
+            time.sleep(10)
+            continue
+
         model = train(data)
         result = predict(model, data)
 
-        await websocket.send_json(result)
+        # =====================
+        # FORMAT MESSAGE
+        # =====================
+        msg = f"""
+🚀 <b>PRO MAX AI v8.3</b>
 
-        # =========================
-        # ⏰ AUTO 17:00 DAILY SEND
-        # =========================
-        h, m = hour_min()
-        d = today()
+📊 CONFIDENCE: {result['confidence']}
 
-        if h == 17 and m == 0 and last_sent != d:
+🎯 BẠCH THỦ: {result['bach_thu']}
 
-            print("📢 SEND 17:00 SIGNAL")
+🔗 XIÊN 2: {' - '.join(result['xien2'])}
 
-            # (ở đây bạn có thể add Telegram send)
-            await websocket.send_json({
-                **result,
-                "event": "AUTO_17:00"
-            })
+🔗 XIÊN 3: {' - '.join(result['xien3'])}
 
-            last_sent = d
+🎲 LÔ 3 SỐ:
+{' '.join(result['lo3'])}
 
-        await asyncio.sleep(5)
+👑 ĐỀ ĐẶC BIỆT: {result['special']}
+"""
+
+        # =====================
+        # ⏰ AUTO 17:00
+        # =====================
+        h = datetime.now(VN).hour
+        m = datetime.now(VN).minute
+
+        if h == 17 and m == 0:
+
+            if storage["last_sent"] != today():
+
+                print("📢 SEND 17:00 SIGNAL")
+
+                send_message(msg)
+
+                storage["last_sent"] = today()
+                save_storage(storage)
+
+        time.sleep(5)
+
+    except Exception as e:
+        print("ERROR:", e)
+        time.sleep(5)
