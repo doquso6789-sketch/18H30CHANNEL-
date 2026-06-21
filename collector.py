@@ -8,12 +8,7 @@ URLS = [
     "https://mketqua.net/tan-suat-loto"
 ]
 
-HEADERS = {
-    "User-Agent": "Mozilla/5.0"
-}
-
-def extract(text):
-    return re.findall(r"\b\d{2}\b", text)
+HEADERS = {"User-Agent": "Mozilla/5.0"}
 
 def crawl():
     data = []
@@ -23,7 +18,7 @@ def crawl():
             r = requests.get(url, headers=HEADERS, timeout=10)
             soup = BeautifulSoup(r.text, "html.parser")
 
-            nums = extract(soup.get_text(" "))
+            nums = re.findall(r"\b\d{2}\b", soup.get_text(" "))
             data.extend(nums)
 
         except:
