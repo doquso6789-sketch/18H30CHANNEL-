@@ -4,14 +4,22 @@ import os
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+
 def send_message(text):
 
-    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+    keyboard = InlineKeyboardMarkup([
+        [
+            InlineKeyboardButton(
+                "☕️ Donate Ủng Hộ",
+                url="https://t.me/DonateXosoAI"
+            )
+        ]
+    ])
 
-    data = {
-        "chat_id": CHAT_ID,
-        "text": text,
-        "parse_mode": "HTML"
-    }
-
-    requests.post(url, data=data)
+    bot.send_message(
+        chat_id=CHAT_ID,
+        text=text,
+        parse_mode="HTML",
+        reply_markup=keyboard
+    )
