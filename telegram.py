@@ -1,10 +1,11 @@
-import requests
 import os
+from telegram import Bot, InlineKeyboardButton, InlineKeyboardMarkup
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+bot = Bot(token=BOT_TOKEN)
+
 
 def send_message(text):
 
