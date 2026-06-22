@@ -54,23 +54,17 @@ while True:
         # =====================
         # FORMAT MESSAGE
         # =====================
-        msg = f"""
-🚀 <b>XSMB AI v8.3</b>
-
-📊 CONFIDENCE: {result['confidence']}
-
-🎯 BẠCH THỦ: {result['bach_thu']}
-
-🔗 XIÊN 2: {' - '.join(result['xien2'])}
-
-🔗 XIÊN 3: {' - '.join(result['xien3'])}
-
-🎲 LÔ 3 SỐ:
-{' '.join(result['lo3'])}
-
-👑 ĐỀ ĐẶC BIỆT: {result['special']}
-"""
-
+msg = (
+    f"<b>"
+    f"🚀 XSMB AI v8.3\n\n"
+    f"📊 CONFIDENCE: {result['confidence']}\n\n"
+    f"🎯 BẠCH THỦ: {result['bach_thu']}\n\n"
+    f"💥 XIÊN 2: {' - '.join(result['xien2'])}\n\n"
+    f"💥 XIÊN 3: {' - '.join(result['xien3'])}\n\n"
+    f"🎲 LÔ 3 SỐ:\n{' '.join(result['lo3'])}\n\n"
+    f"💣 ĐỀ ĐẶC BIỆT: {result['special']}"
+    f"</b>"
+)
         # =====================
         # ⏰ AUTO 17:00
         # =====================
