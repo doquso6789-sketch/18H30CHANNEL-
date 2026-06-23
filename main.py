@@ -1,5 +1,6 @@
 import time
 import json
+import asyncio
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
@@ -14,9 +15,6 @@ def today():
     return datetime.now(VN).strftime("%Y-%m-%d")
 
 
-# =========================
-# LOAD STORAGE
-# =========================
 def load_storage():
     try:
         with open("storage.json", "r", encoding="utf-8") as f:
@@ -34,32 +32,25 @@ storage = load_storage()
 
 print("🚀 XSMB AI v8.3 STARTED")
 
-
-# =========================
-# LOOP
-# =========================
 while True:
 
     try:
 
         data = crawl()
 
-        if len(data) == 0:
-            print("⚠️ no data")
+        if not data:
+            print("⚠️ No data")
             time.sleep(10)
             continue
 
         model = train(data)
         result = predict(model, data)
 
-        # =====================
-        # FORMAT MESSAGE
-        # =====================
         msg = (
             f"<b>"
             f"🚀 XSMB AI v8.3\n\n"
             f"📅 NGÀY: {today()}\n\n"
-            f"📊 CONFIDENCE: {result['confidence']}\n\n"
+            f"📊 CONFIDENCE: {result['confidence']}%\n\n"
             f"🎯 BẠCH THỦ: {result['bach_thu']}\n\n"
             f"💥 XIÊN 2: {' - '.join(result['xien2'])}\n\n"
             f"💥 XIÊN 3: {' - '.join(result['xien3'])}\n\n"
@@ -68,27 +59,25 @@ while True:
             f"</b>"
         )
 
-        # =====================
-        # ⏰ AUTO 17:00
-        # =====================
-        h = datetime.now(VN).hour
-        m = datetime.now(VN).minute
+        now = datetime.now(VN)
 
-        if h == 17 and m == 0:
+        if (
+            now.hour == 17
+            and now.minute == 30
+            and storage["last_sent"] != today()
+        ):
 
-            if storage["last_sent"] != today():
+            print("📢 SEND 17:30 SIGNAL")
 
-                print("📢 SEND 17:00 SIGNAL")
+            asyncio.run(send_message(msg))
 
-                send_message(msg)
+            storage["last_sent"] = today()
+            save_storage(storage)
 
-                storage["last_sent"] = today()
-                save_storage(storage)
-
-                print("✅ Sent successfully")
+            print("✅ Sent successfully")
 
         time.sleep(5)
 
     except Exception as e:
-        print("ERROR:", e)
+        print("❌ ERROR:", e)
         time.sleep(5)
