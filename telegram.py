@@ -7,7 +7,7 @@ CHAT_ID = os.getenv("CHAT_ID")
 bot = Bot(token=BOT_TOKEN)
 
 
-def send_message(text):
+async def send_message(text):
 
     keyboard = InlineKeyboardMarkup([
         [
@@ -18,7 +18,7 @@ def send_message(text):
         ]
     ])
 
-    bot.send_message(
+    await bot.send_message(
         chat_id=CHAT_ID,
         text=text,
         parse_mode="HTML",
